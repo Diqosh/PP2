@@ -1,11 +1,11 @@
 class Toupper:
     def __init__(self, a):
-        self.a = max(a.split(), key=lambda x: len(x))
+        self.a = len(a.split())
 
-    def printMax(self):
-        print(self.a, len(self.a), sep = '\n')
+    def print(self):
+        print(self.a)
 
 
 if __name__ == '__main__':
     myclass = Toupper(input())
-    myclass.printMax()
+    myclass.print()

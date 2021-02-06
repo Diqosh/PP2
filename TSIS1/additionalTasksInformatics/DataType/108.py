@@ -1,15 +1,10 @@
-#не закончен
-class SearchTwoOtMore:
-    def __init__(self, word):
-        self.word = word
-    def EqualTwo(self, x):
-        if x == 2:
-            return True
-        else:
-            return False
-    def filtered(self):
-        return iterableObj = filter(self.word, EqualTwo())
+class CheckIsPol:
+    def __init__(self, a):
+        self.a = a
+        self.b = a[::-1]
+    def check(self):
+        print('yes') if self.a == self.b else print('no')
 
 if __name__ == '__main__':
-    a = SearchTwoOtMore(input())
-    print(a.filtered())
+    MyClass = CheckIsPol(input())
+    MyClass.check()

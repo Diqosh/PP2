@@ -7,5 +7,5 @@ class Toupper:
 
 
 if __name__ == '__main__':
-    myclass = Toupper(input(),input())
+    myclass = Toupper(input(), input())
     myclass.print()
