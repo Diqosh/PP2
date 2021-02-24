@@ -44,7 +44,7 @@ if __name__ == '__main__':
     arrow = pygame.image.load('resources/images/bullet.png')
 
     while 1:
-        pygame.time.Clock().tick(30)
+        pygame.time.Clock().tick(10)
 
         draw_bg()
         draw_castles()
@@ -64,20 +64,20 @@ if __name__ == '__main__':
         angle = atan2(position[1] - (positionPlayer[1] + 23), position[0] - (positionPlayer[0] + 32)) * 57.32
         playerrot = pygame.transform.rotate(player, 360 - angle)
         playerpos1 = (positionPlayer[0] - playerrot.get_width() // 2, positionPlayer[1] - playerrot.get_height() // 2)
-
+        print("mouse" , position)
         for event in pygame.event.get():
             if event.type is pygame.MOUSEBUTTONDOWN:
                 posMouse = pygame.mouse.get_pos()
                 acc[1] += 1
                 arrows.append([atan2(posMouse[1] - (positionPlayer[1] + 23), posMouse[0] - (positionPlayer[0] + 32)), positionPlayer[0] + 32, positionPlayer[1] + 23])
-
+                print(positionPlayer, positionPlayer)
         for bullet in arrows:
             index = 0
             velx = cos(bullet[0])*movement
             vely = sin(bullet[0])*movement
             bullet[1] += velx
             bullet[2] += vely
-            if bullet[1] <  -64 or bullet[1] > 640 or bullet[2] < -64 or bullet[2] > 480:
+            if bullet[1] < -64 or bullet[1] > 640 or bullet[2] < -64 or bullet[2] > 480:
                 arrows.pop(index)
             index += 1
             for projectile in arrows:

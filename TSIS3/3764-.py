@@ -1,16 +1,18 @@
 import sys
 
-def f(elem):
-    return elem[1]
+
+def cmp(elem):
+    return (-elem[1], elem[0])
+
 
 if __name__ == '__main__':
     dic = dict()
-    text = str()
+    text = list()
     for line in sys.stdin:
-        text += input() + ' '
-    for i in text:
-        if i not in dic.keys():
-            dic[i] = text.count(i)
-    dic_sorted = sorted(dic.items(), key=f, reverse=True)
-    for i in dic_sorted:
+        text = line.split()
+        for i in text:
+            dic[i] = dic.get(i, 0) + 1
+
+    sortedItmes = sorted(dic.items(), key=cmp)
+    for i in sortedItmes:
         print(i[0])
