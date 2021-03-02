@@ -44,9 +44,13 @@ txtjs = '''
 }
 '''
 
-if __name__ == '__main__':
-    data = json.loads(txtjs)
-    l = data["members"][0]
-    l = 'asdf'
 
-    print(l)
+if __name__ == '__main__':
+    s = 123
+    a = s
+    s = '1'
+    print(id(s), id(a))
+
+
+
+
