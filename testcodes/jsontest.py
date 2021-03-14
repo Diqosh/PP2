@@ -1,4 +1,4 @@
-import json
+import json, csv, re
 
 txtjs = '''
 {
@@ -6,7 +6,7 @@ txtjs = '''
   "homeTown": "Metro City",
   "formed": 2016,
   "secretBase": "Super tower",
-  "active": true,
+  "act`ive": true,
   "members": [
     {
       "name": "Molecule Man",
@@ -46,10 +46,13 @@ txtjs = '''
 
 
 if __name__ == '__main__':
-    s = 123
-    a = s
-    s = '1'
-    print(id(s), id(a))
+    txt = input()
+    pattern = r'(?P<DAY>\d{2}).(?P<MONTH>\d{2}).(?P<YEAR>\d{4})'
+    x = re.search(pattern, txt)
+    print(x.group('DAY'))
+    print(x.group('MONTH'))
+    print(x.group('YEAR'))
+
 
 
 
