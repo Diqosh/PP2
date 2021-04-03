@@ -12,10 +12,10 @@ class GameObjects:
 
 
 class MyFonts(GameObjects):
-    def __init__(self, x=75, y=100, k=30, font_size=17):
+    def __init__(self, k=30, font_size=17):
         self.k = k
         self.font_size = font_size
-        GameObjects.__init__(self, x, y)
+        GameObjects.__init__(self)
         self.listOfStrY = ['1.00', '0.75', '0.50', '0.25', '0.00', '-0.25', '-0.50', '-0.75', '-1.00']
         self.listOfStrX = ['-3п', '-5п', '-2п', '-3п', '-п', '-п', '0', 'п', 'п', '3п', '2п', '5п', '3п']
         self.font = pygame.font.SysFont("roboto", self.font_size, italic=True)
@@ -70,15 +70,16 @@ class MyFonts(GameObjects):
                          (self.x + self.table_size[0] // 6 * 4 + sin.get_width() // 2 + lineWidht,
                           self.y + sin.get_height() // 2))
         pygame.draw.line(screen, BLUE,
-                         (self.x + self.table_size[0] // 6 * 4 + cos.get_width() // 2, self.y + sin.get_height() + cos.get_height()//2),
+                         (self.x + self.table_size[0] // 6 * 4 + cos.get_width() // 2,
+                          self.y + sin.get_height() + cos.get_height() // 2),
                          (self.x + self.table_size[0] // 6 * 4 + cos.get_width() // 2 + lineWidht,
-                          self.y + + sin.get_height() + cos.get_height()//2))
+                          self.y + + sin.get_height() + cos.get_height() // 2))
 
 
 class MyTable(GameObjects):
-    def __init__(self, x=75, y=100, k=30):
+    def __init__(self, k=30):
         self.k = k
-        GameObjects.__init__(self, x, y)
+        GameObjects.__init__(self)
 
     def draw(self):
         # x - windows
@@ -142,9 +143,9 @@ class MyTable(GameObjects):
 
 
 class MyCos(GameObjects):
-    def __init__(self, x=75, y=100, points=None):
+    def __init__(self, points=None):
 
-        GameObjects.__init__(self, x, y)
+        GameObjects.__init__(self)
         if points is None:
             points = []
 
@@ -157,7 +158,46 @@ class MyCos(GameObjects):
             self.points.append([x + self.x, y])
 
     def draw(self):
+        # draw cos
         pygame.draw.aalines(screen, BLUE, False, self.points)
+
+        # make a dashed
+        for x in range(self.x, self.x + self.table_size[0], self.table_size[0] // 3):
+            y = self.table_size[1] + self.y
+            pygame.draw.rect(screen, WHITE,
+                             pygame.Rect(x + self.table_size[0] // (6 * 8) - 5, y - self.table_size[1] // (16) - 5, 20,
+                                         20))
+            pygame.draw.rect(screen, WHITE,
+                             pygame.Rect(x + self.table_size[0] // (6 * 8) * 3 - 5,
+                                         y - self.table_size[1] // 16 * 5 - 5,
+                                         20, 20))
+            pygame.draw.rect(screen, WHITE,
+                             pygame.Rect(x + self.table_size[0] // (6 * 8) * 5 - 15,
+                                         y - self.table_size[1] // (16) * 9 - 5,
+                                         20, 20))
+            pygame.draw.rect(screen, WHITE,
+                             pygame.Rect(x + self.table_size[0] // (6 * 8) * 7 - 30,
+                                         y - self.table_size[1] // 16 * 14 + 20,
+                                         20, 20))
+            pygame.draw.rect(screen, WHITE,
+                             pygame.Rect(x + self.table_size[0] // 6 * 2 - 35, y - self.table_size[1] // (16) - 5, 20,
+                                         20))
+            pygame.draw.rect(screen, WHITE,
+                             pygame.Rect(x + self.table_size[0] // (6) * 2 - 65,
+                                         y - self.table_size[1] // 16 * 5 - 5,
+                                         20, 20))
+            pygame.draw.rect(screen, WHITE,
+                             pygame.Rect(x + self.table_size[0] // (6) * 2 - 85,
+                                         y - self.table_size[1] // (16) * 9 - 5,
+                                         20, 20))
+            pygame.draw.rect(screen, WHITE,
+                             pygame.Rect(x + self.table_size[0] // (6) * 2 - 110,
+                                         y - self.table_size[1] // 16 * 14 + 20,
+                                         20, 20))
+
+            # make dashed in window
+
+            pygame.draw.rect(screen, WHITE, pygame.Rect(725, 143, 15, 20))
 
 
 class MySin(GameObjects):
@@ -194,7 +234,7 @@ if __name__ == '__main__':
     mySin = MySin()
     myTable = MyTable()
     myFonts = MyFonts()
-    graphObjects.extend([myTable, mySin, myCos, myFonts])
+    graphObjects.extend([myTable, mySin, myFonts, myCos])
 
     screen.fill(WHITE)
 

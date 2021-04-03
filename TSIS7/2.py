@@ -7,6 +7,7 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 
+
 pygame.init()
 screen = pygame.display.set_mode((780, 560))
 surface = pygame.Surface((600, 318))
