@@ -1,59 +1,24 @@
-import json, csv, re
+import pygame, sys
 
-txtjs = '''
-{
-  "squadName": "Super hero squad",
-  "homeTown": "Metro City",
-  "formed": 2016,
-  "secretBase": "Super tower",
-  "act`ive": true,
-  "members": [
-    {
-      "name": "Molecule Man",
-      "age": 29,
-      "secretIdentity": "Dan Jukes",
-      "powers": [
-        "Radiation resistance",
-        "Turning tiny",
-        "Radiation blast"
-      ]
-    },
-    {
-      "name": "Madame Uppercut",
-      "age": 39,
-      "secretIdentity": "Jane Wilson",
-      "powers": [
-        "Million tonne punch",
-        "Damage resistance",
-        "Superhuman reflexes"
-      ]
-    },
-    {
-      "name": "Eternal Flame",
-      "age": 1000000,
-      "secretIdentity": "Unknown",
-      "powers": [
-        "Immortality",
-        "Heat Immunity",
-        "Inferno",
-        "Teleportation",
-        "Interdimensional travel"
-      ]
-    }
-  ]
-}
-'''
+
 
 
 if __name__ == '__main__':
-    txt = input()
-    pattern = r'(?P<DAY>\d{2}).(?P<MONTH>\d{2}).(?P<YEAR>\d{4})'
-    x = re.search(pattern, txt)
-    print(x.group('DAY'))
-    print(x.group('MONTH'))
-    print(x.group('YEAR'))
+    pygame.init()
+    screen = pygame.display.set_mode((640, 480))
 
+    font = pygame.font.SysFont("arial", 30)
 
+    text = font.render("Hello, World", True, (0, 128, 0))
+    while True:
 
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
 
+        screen.fill((0, 0, 0))
+        screen.blit(text, (320 - text.get_width() // 2, 240 - text.get_height() // 2) )
+        print(pygame.mouse.get_pos() ,(320 - text.get_width() // 2, 240 - text.get_height() // 2) )
 
+        pygame.display.flip()
