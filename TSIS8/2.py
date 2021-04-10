@@ -82,11 +82,13 @@ class Player(pygame.sprite.Sprite):
 
 player = Player()
 enemy1 = Enemy()
-
+enemy2 = Enemy()
 coin = Coin()
+
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
 all_sprites.add(enemy1)
+
 
 all_sprites.add(coin)
 
