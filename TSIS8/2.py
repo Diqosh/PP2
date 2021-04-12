@@ -1,6 +1,6 @@
 from pygame.locals import *
 import sys
-import random, time
+import random, time, pygame
 from vars import *
 
 pygame.init()
@@ -11,8 +11,16 @@ pygame.init()
 
 def render_score():
     global SCORE
-    scores = font_small.render(str(SCORE), True, BLACK)
+    scores = font_small.render(f'score = {SCORE}', True, BLACK)
     SCREEN.blit(scores, (DISPLAY_SIZE[0] - 10 - scores.get_width(), 10))
+
+def render_speed():
+    speed= font_small.render(f'speed = {enemy1.speed * 2}', True, BLACK)
+    SCREEN.blit(speed, (DISPLAY_SIZE[0] - 10 - speed.get_width(), 30))
+
+
+
+
 
 class Coin(pygame.sprite.Sprite):
     def __init__(self):
@@ -82,7 +90,6 @@ class Player(pygame.sprite.Sprite):
 
 player = Player()
 enemy1 = Enemy()
-enemy2 = Enemy()
 coin = Coin()
 
 all_sprites = pygame.sprite.Group()
@@ -122,6 +129,7 @@ if __name__ == '__main__':
 
 
         render_score()
+        render_speed()
 
         if pygame.sprite.spritecollideany(player, enemies):
             pygame.mixer.stop()
