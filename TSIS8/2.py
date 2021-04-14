@@ -15,7 +15,7 @@ def render_score():
     SCREEN.blit(scores, (DISPLAY_SIZE[0] - 10 - scores.get_width(), 10))
 
 def render_speed():
-    speed= font_small.render(f'speed = {enemy1.speed * 2}', True, BLACK)
+    speed = font_small.render(f'speed = {enemy1.speed * 2}', True, BLACK)
     SCREEN.blit(speed, (DISPLAY_SIZE[0] - 10 - speed.get_width(), 30))
 
 
