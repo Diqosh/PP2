@@ -235,5 +235,6 @@ def menu():
         mouse_click = False
         pygame.display.update()
 
+if __name__ == '__main__':
 
-menu()
+    menu()
