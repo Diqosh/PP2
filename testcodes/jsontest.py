@@ -1,24 +1,13 @@
-import pygame, sys
+import pygame, sys, pickle
 
-
-
-
+data_dict = {
+    '1': [1, 2],
+    'asd': 'asd',
+}
+data_dict['asdd'] = 'a'
 if __name__ == '__main__':
-    pygame.init()
-    screen = pygame.display.set_mode((640, 480))
-
-    font = pygame.font.SysFont("arial", 30)
-
-    text = font.render("Hello, World", True, (0, 128, 0))
-    while True:
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-        screen.fill((0, 0, 0))
-        screen.blit(text, (320 - text.get_width() // 2, 240 - text.get_height() // 2) )
-        print(pygame.mouse.get_pos() ,(320 - text.get_width() // 2, 240 - text.get_height() // 2) )
-
-        pygame.display.flip()
+    with open('1.json', 'wb') as pickle_file:
+        pickle.dump(data_dict, pickle_file)
+    with open('1.json', 'rb') as pickle_file:
+        new_data = pickle.load(pickle_file)
+    print(new_data)

@@ -1,16 +1,26 @@
-import pygame, random, sys, json
+import pygame, random, sys, pickle
 from pygame.math import Vector2
 from pygame import *
 
 pygame.init()
 
-json_file = open('Materials/snake.json', 'r', encoding='utf-8')
-myDict = json.load(json_file)
 counter_for_level = 0
 list_bodies_snake_after_pause = []
 direction_snake_after_pause = None
 
+
+def getMaxScore():
+    with open('Materials/max_score.json', 'rb') as pickle_file:
+
+        try:
+            data = pickle.load(pickle_file)
+        except:
+            return 0
+    return data.get('max_score', 0)
+
+
 PAUSE = False
+maxScore = getMaxScore()
 score = 0
 mouse_click = False
 eat_sound = pygame.mixer.Sound('Materials/eat.wav')
@@ -32,6 +42,43 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
+
+
+def save_snake_info(level, bodies, direction):
+    data_snake = dict()
+    data_snake['is_changed'] = True
+    data_snake['level'] = level
+    data_snake['bodies'] = bodies
+    data_snake['direction'] = direction
+
+    with open('Materials/snake.json', 'wb') as pickle_file:
+        if data_snake['direction'] == None:
+            data_snake['is_changed'] = False
+        pickle.dump(data_snake, pickle_file)
+
+
+
+def reset_snake_info():
+    empty_list = dict()
+
+    with open('Materials/snake.json', 'wb') as pickle_file:
+        pickle.dump(empty_list, pickle_file)
+
+
+
+def check_json_is_changed():
+    with open('Materials/snake.json', 'rb') as pickle_file:
+        data = pickle.load(pickle_file)
+    return data.get('is_changed', False)
+
+
+def get_data():
+    with open('Materials/snake.json', 'rb') as pickle_file:
+        data = pickle.load(pickle_file)
+
+
+    list_snake_info = [value for key, value in data.items()]
+    return list_snake_info[1:]
 
 
 def draw_text(text, color, xpos, ypos):
@@ -62,6 +109,9 @@ class Bacgraund:
         SCREEN.blit(table_image, table_image.get_rect(topright=(numOfCeil * sizeOfCeil, 0)))
         score_image = font_small.render(f'Score: {score}', True, BLACK)
         SCREEN.blit(score_image, score_image.get_rect(topleft=((numOfCeil - 3) * sizeOfCeil, 0)))
+        max_score_image = font_small.render(f'Max Score: {maxScore}', True, BLACK)
+        SCREEN.blit(max_score_image,
+                    max_score_image.get_rect(topleft=((numOfCeil - 3) * sizeOfCeil - 10, score_image.get_height() + 5)))
 
 
 class Snake(pygame.sprite.Sprite):
@@ -107,15 +157,27 @@ class Snake(pygame.sprite.Sprite):
             eat_sound.play()
 
     def condiotions_game_over(self):
+        global score, maxScore
         if not 1 <= self.body[-1].x < numOfCeil - 1 or not 1 <= self.body[-1].y < numOfCeil - 1:
+            if score > maxScore:
+                self.save_score()
             self.kill()
             self.game_over()
 
         for block in self.body[:-1]:
             if block == self.body[-1]:
+                if score > maxScore:
+                    self.save_score()
+                print(self.body)
                 self.kill()
                 self.game_over()
-        pass
+
+
+    def save_score(self):
+        global score
+        new_data = {'max_score': score}
+        with open('Materials/max_score.json', 'wb') as pickle_file:
+            pickle.dump(new_data, pickle_file)
 
     def game_over(self):
 
@@ -134,13 +196,15 @@ class Friut(pygame.sprite.Sprite):
 
 
 fruit = Friut()
-
+snake = Snake()
 bg = Bacgraund()
 
 
-def game_loop(level, body_snake_after_pause, direction_snake):
-    global list_bodies_snake_after_pause, direction_snake_after_pause
-    snake = Snake(body_snake_after_pause, direction_snake)
+def game_loop(level, body_snake_after_pause, direction_snake, kill=False):
+    global list_bodies_snake_after_pause, direction_snake_after_pause, snake
+    if kill:
+        del snake
+        snake = Snake(body_snake_after_pause, direction_snake)
     game_obj = []
     game_obj.extend([bg, fruit, snake])
     # every 100 ms rum snake.move
@@ -182,7 +246,7 @@ def game_loop(level, body_snake_after_pause, direction_snake):
 
 
 def menu():
-    global mouse_click, PAUSE, list_bodies_snake_after_pause, direction_snake_after_pause, counter_for_level, myDict
+    global mouse_click, PAUSE, list_bodies_snake_after_pause, direction_snake_after_pause, counter_for_level, myDict, score, maxScore
 
     level = ['Easy', 'Medium', 'even dont try please']
 
@@ -204,14 +268,18 @@ def menu():
         rect_level = draw_text(f'level: {level[counter_for_level]}', WHITE, DISPLAY_SIZE[0] // 2, 300)
         rect_resume = draw_text('resume', WHITE, DISPLAY_SIZE[0] // 2, 400)
         rect_save = draw_text('save', WHITE, DISPLAY_SIZE[0] // 2, 500)
-        rect_quit = draw_text('quit', WHITE, DISPLAY_SIZE[0] // 2, 600)
+        rect_reset = draw_text('reset', WHITE, DISPLAY_SIZE[0] // 2, 600)
+        rect_quit = draw_text('quit', WHITE, DISPLAY_SIZE[0] // 2, 700)
         x_pos_mouse, y_pos_mouse = pygame.mouse.get_pos()
 
         if rect_start.collidepoint((x_pos_mouse, y_pos_mouse)):
             draw_text('start game', RED, DISPLAY_SIZE[0] // 2, 200)
             if mouse_click:
+                PAUSE = False
                 mouse_click = False
-                game_loop(counter_for_level, None, None)
+                score = 0
+                maxScore = getMaxScore()
+                game_loop(counter_for_level, None, None, True)
 
         if rect_level.collidepoint((x_pos_mouse, y_pos_mouse)):
             draw_text(f'level: {level[counter_for_level]}', RED, DISPLAY_SIZE[0] // 2, 300)
@@ -220,21 +288,28 @@ def menu():
                 counter_for_level += 1
         if rect_resume.collidepoint((x_pos_mouse, y_pos_mouse)):
             draw_text('resume', RED, DISPLAY_SIZE[0] // 2, 400)
-            if mouse_click:
+            if mouse_click and check_json_is_changed():
                 PAUSE = False
-                game_loop(counter_for_level, list_bodies_snake_after_pause, direction_snake_after_pause)
+                print('alalaal')
+                game_loop(*get_data(), True)
+            elif mouse_click and not check_json_is_changed():
+                print('firstable Play! and Save')
         if rect_save.collidepoint((x_pos_mouse, y_pos_mouse)):
             draw_text('save', RED, DISPLAY_SIZE[0] // 2, 500)
             if mouse_click:
-                pass
+                save_snake_info(counter_for_level, list_bodies_snake_after_pause, direction_snake_after_pause)
+        if rect_reset.collidepoint((x_pos_mouse, y_pos_mouse)):
+            draw_text('reset', RED, DISPLAY_SIZE[0] // 2, 600)
+            if mouse_click:
+                reset_snake_info()
         if rect_quit.collidepoint((x_pos_mouse, y_pos_mouse)):
-            draw_text('quit', RED, DISPLAY_SIZE[0] // 2, 600)
+            draw_text('quit', RED, DISPLAY_SIZE[0] // 2, 700)
             if mouse_click:
                 sys.exit()
 
         mouse_click = False
         pygame.display.update()
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     menu()
