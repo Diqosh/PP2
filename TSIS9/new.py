@@ -11,7 +11,6 @@ direction_snake_after_pause = None
 
 def getMaxScore():
     with open('Materials/max_score.json', 'rb') as pickle_file:
-
         try:
             data = pickle.load(pickle_file)
         except:

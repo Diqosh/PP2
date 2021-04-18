@@ -6,8 +6,12 @@ data_dict = {
 }
 data_dict['asdd'] = 'a'
 if __name__ == '__main__':
-    with open('1.json', 'wb') as pickle_file:
-        pickle.dump(data_dict, pickle_file)
-    with open('1.json', 'rb') as pickle_file:
-        new_data = pickle.load(pickle_file)
-    print(new_data)
+    # with open('1.json', 'wb') as pickle_file:
+    #     pickle.dump(data_dict, pickle_file)
+    # with open('1.json', 'rb') as pickle_file:
+    #     new_data = pickle.load(pickle_file)
+    # print(new_data)
+    a = [1, 2]
+    c = [2,3 ]
+    a
+    print(a-c)
