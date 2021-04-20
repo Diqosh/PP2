@@ -1,5 +1,6 @@
 import pygame, sys
 from pygame import *
+
 pygame.init()
 
 counter_to_fix = 0
@@ -26,14 +27,20 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 isPressed = False
 color = BLACK
+
+
+def save():
+    pygame.image.save(SCREEN, 'Materials/imagePaint.png')
+
 def draw_text(text, color, xpos, ypos):
     textobj = font.render(text, True, color)
     text_rect = textobj.get_rect(topleft=(xpos, ypos))
     SCREEN.blit(textobj, text_rect)
     return text_rect
 
+
 class Rectangle:
-    def __init__(self, first_points, second_points=None, color=RED, width=1):
+    def __init__(self, first_points, second_points, color=BLACK, width=1):
         self.first_points = first_points
         self.second_points = second_points
         self.size = [second_points[0] - first_points[0], second_points[1] - first_points[1]]
@@ -41,7 +48,6 @@ class Rectangle:
         self.width = width
 
     def draw(self):
-
         pygame.draw.rect(SCREEN, self.color, Rect(*self.first_points, *self.size), self.width)
 
 
@@ -69,7 +75,6 @@ class Circle:
         pygame.draw.circle(SCREEN, self.color, self.center, self.radius, self.width)
 
 
-
 if __name__ == '__main__':
 
     SCREEN.fill(WHITE)
@@ -84,17 +89,18 @@ if __name__ == '__main__':
                 to_erase = True
                 prevPoint_tuple = pygame.mouse.get_pos()
                 prevPoint = list(prevPoint_tuple)
-
                 mouse_click = True
             elif event.type == pygame.MOUSEBUTTONUP:
                 to_draw = True
                 isPressed = False
+
             elif event.type == pygame.MOUSEMOTION and isPressed == True:
                 lastPoint_tuple = pygame.mouse.get_pos()
                 lastPoint = list(lastPoint_tuple)
                 if to_erase and selected_eraser:
                     eraser = Eraser(lastPoint)
                     eraser.draw()
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_l:
                     color = BLACK
@@ -104,6 +110,8 @@ if __name__ == '__main__':
                     color = GREEN
                 elif event.key == pygame.K_b:
                     color = BLUE
+                elif event.key == pygame.K_s:
+                    save()
 
         rect_eraser = draw_text('eraser', BLUE, 10, 10)
         rect_rect = draw_text('rectangle', BLUE, 40 + rect_eraser.width, 10)
@@ -125,7 +133,6 @@ if __name__ == '__main__':
                 selected_circle = False
                 mouse_click = False
 
-
         if rect_circle.collidepoint((x_pos_mouse, y_pos_mouse)):
             draw_text('circle', RED, 70 + rect_eraser.width + rect_rect.width, 10)
             if mouse_click:
@@ -133,9 +140,6 @@ if __name__ == '__main__':
                 selected_rect = False
                 selected_circle = True
                 mouse_click = False
-
-
-
 
         if to_draw:
             to_draw = False
